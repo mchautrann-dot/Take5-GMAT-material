@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sortable Table</title>
+  <style>
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { cursor: pointer; background: #f2f2f2; }
+    th.asc::after { content: " ▲"; }
+    th.desc::after { content: " ▼"; }
+  </style>
+</head>
+<body>
+
+With reference to this table, a statistician has proposed the following criteria for determining the “most geographically typical” of the listed Australian states/territories:
+<br>
+<table class="stoker table-sortable" data-type="sortable">
+  <thead>
+    <tr>
+      <th>State/territory</th>
+      <th>Land area<br>(km^2)</th>
+      <th>Population<br>(2006)</th>
+      <th>Population density<br>(people/km^2)</th>
+      <th>% of population<br>in capital</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Australian Capital<br>Territory </td><td>2358</td><td>344200</td><td>137.53</td><td>99.6</td></tr>
+    <tr><td>New South Wales</td><td>800642</td><td>6967200</td><td>8.44</td><td>63</td></tr>
+    <tr><td>Northern Territory</td><td>1349129</td><td>219900</td><td>0.15</td><td>54</td></tr>
+    <tr><td>Queensland</td><td>1730648</td><td>4279400</td><td>2.26</td><td>46</td></tr>
+    <tr><td>South Australia</td><td>983482</td><td>1601800</td><td>1.56</td><td>73.5</td></tr>
+    <tr><td>Tasmania</td><td>68401</td><td>498200</td><td>7.08</td><td>41</td></tr>
+    <tr><td>Victoria</td><td>227416</td><td>5297600</td><td>22</td><td>71</td></tr>
+    <tr><td>Western Australia</td><td>2529875</td><td>2163200</td><td>0.79</td><td>73.4</td></tr>
+  </tbody>
+</table>
+<span style="font-size: 85%; line-height: inherit">
+  <span style="font-style: italic">(<span style="font-weight: bold">Sort ↕</span> the table by clicking on the headers)</span>
+</span>
+
+<script>
+  document.querySelectorAll("th").forEach((header, index) => {
+    header.addEventListener("click", () => {
+      const table = header.closest("table");
+      const tbody = table.querySelector("tbody");
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+      const isAsc = header.classList.contains("asc");
+      const direction = isAsc ? -1 : 1;
+
+      rows.sort((a, b) => {
+        let aText = a.children[index].innerText.replace(/,/g,'');
+        let bText = b.children[index].innerText.replace(/,/g,'');
+        let aVal = parseFloat(aText); let bVal = parseFloat(bText);
+        if (isNaN(aVal) || isNaN(bVal)) {
+          return aText.localeCompare(bText) * direction;
+        } else {
+          return (aVal - bVal) * direction;
+        }
+      });
+
+      tbody.innerHTML = "";
+      rows.forEach(row => tbody.appendChild(row));
+
+      table.querySelectorAll("th").forEach(th => th.classList.remove("asc", "desc"));
+      header.classList.toggle("asc", !isAsc);
+      header.classList.toggle("desc", isAsc);
+    });
+  });
+</script>
+
+</body>
+</html>
