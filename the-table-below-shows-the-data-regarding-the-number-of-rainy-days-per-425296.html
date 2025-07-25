@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sortable Table</title>
+  <style>
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { cursor: pointer; background: #f2f2f2; }
+    th.asc::after { content: " ▲"; }
+    th.desc::after { content: " ▼"; }
+  </style>
+</head>
+<body>
+
+<table class="stoker table-sortable" data-type="sortable"><thead><tr><th><span style="font-weight: bold">District</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">States</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Maximum Rain<br>days per month</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Minimum Rain<br>days per month</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Natives' Comments</span><span class="icon-svg-play3"></span></th></tr></thead><tbody><tr><td>Adelaide</td><td>Tasmania</td><td>8</td><td>3</td><td>Poor</td></tr><tr><td>Bandigo</td><td>Victoria</td><td>12</td><td>7</td><td>Good</td></tr><tr><td>Bllarat</td><td>Victoria</td><td>17</td><td>9</td><td>Excess</td></tr><tr><td>Brisbane</td><td>Queensland</td><td>11</td><td>2</td><td>Good</td></tr><tr><td>BunBury</td><td>Western Australia</td><td>21</td><td>14</td><td>Excess</td></tr><tr><td>Craines</td><td>Queensland</td><td>12</td><td>3</td><td>Good</td></tr><tr><td>Geelong</td><td>Victoria</td><td>19</td><td>11</td><td>Excess</td></tr><tr><td>Geraldton</td><td>Western Australia</td><td>22</td><td>16</td><td>Excess</td></tr><tr><td>Gladstone</td><td>Queensland</td><td>10</td><td>4</td><td>Good</td></tr><tr><td>Greater Hobart</td><td>Tasmania</td><td>11</td><td>6</td><td>Good</td></tr><tr><td>Hervey Bay</td><td>Queensland</td><td>23</td><td>13</td><td>Excess</td></tr><tr><td>Kalgoorlie-Boulder</td><td>Western Australia</td><td>28</td><td>20</td><td>Excess</td></tr><tr><td>LaTrobe Vally</td><td>Victoria</td><td>24</td><td>17</td><td>Excess</td></tr><tr><td>Launceston</td><td>Tasmania</td><td>22</td><td>11</td><td>Excess</td></tr><tr><td>Mackay</td><td>Queensland</td><td>9</td><td>5</td><td>Less</td></tr><tr><td>Melbourne</td><td>Victoria</td><td>21</td><td>12</td><td>Excess</td></tr><tr><td>Mildura</td><td>Victoria</td><td>22</td><td>12</td><td>Good</td></tr><tr><td>New Castle</td><td>New South Wales (NSW)</td><td>11</td><td>7</td><td>Good</td></tr><tr><td>Pert</td><td>Western Australia</td><td>22</td><td>11</td><td>Excess</td></tr><tr><td>Shepparton</td><td>Victoria</td><td>25</td><td>19</td><td>Excess</td></tr><tr><td>Tamwroth</td><td>New South Wales (NSW)</td><td>23</td><td>17</td><td>Excess</td></tr><tr><td>Townsville</td><td>Queensland</td><td>7</td><td>0</td><td>Poor</td></tr><tr><td>Warmambool</td><td>Victoria</td><td>27</td><td>21</td><td>Excess</td></tr><tr><td>Wollongong</td><td>New South Wales (NSW)</td><td>22</td><td>13</td><td>Excess</td></tr></tbody></table>
+<span style="font-size: 85%; line-height: inherit">
+  <span style="font-style: italic">(<span style="font-weight: bold">Sort ↕</span> the table by clicking on the headers)</span>
+</span>
+
+<script>
+  document.querySelectorAll("th").forEach((header, index) => {
+    header.addEventListener("click", () => {
+      const table = header.closest("table");
+      const tbody = table.querySelector("tbody");
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+      const isAsc = header.classList.contains("asc");
+      const direction = isAsc ? -1 : 1;
+
+      rows.sort((a, b) => {
+        let aText = a.children[index].innerText.replace(/,/g,'');
+        let bText = b.children[index].innerText.replace(/,/g,'');
+        let aVal = parseFloat(aText); let bVal = parseFloat(bText);
+        if (isNaN(aVal) || isNaN(bVal)) {
+          return aText.localeCompare(bText) * direction;
+        } else {
+          return (aVal - bVal) * direction;
+        }
+      });
+
+      tbody.innerHTML = "";
+      rows.forEach(row => tbody.appendChild(row));
+
+      table.querySelectorAll("th").forEach(th => th.classList.remove("asc", "desc"));
+      header.classList.toggle("asc", !isAsc);
+      header.classList.toggle("desc", isAsc);
+    });
+  });
+</script>
+
+</body>
+</html>
