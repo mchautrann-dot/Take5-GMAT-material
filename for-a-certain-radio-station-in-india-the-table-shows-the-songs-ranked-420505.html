@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { cursor: pointer; background: #f2f2f2; }
+    th.asc::after { content: " ▲"; }
+    th.desc::after { content: " ▼"; }
+  </style>
+</head>
+<body>
+For a certain radio station in India, the table shows the songs ranked among the top 10 during Week W. The rankings are determined by the number of listener requests for each song, with rank 1 being the most requested, rank 2 the second-most requested, and so on. Lesser numbers constitute higher rankings. The table also gives, as of Week W, each song's rank for the previous week, the number of weeks it has been among the top 20, and its peak rank (the highest ranking it has achieved). In the column for Previous week's rank, "n/a" indicates that the song was not ranked in the week immediately prior to Week W.
+<table class="stoker table-sortable" data-type="sortable"><thead><tr><th><span style="font-weight: bold">Week W<br>rank</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Song</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Previous week's<br>rank</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Weeks in<br>top 20</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Peak<br>rank</span><span class="icon-svg-play3"></span></th></tr></thead><tbody><tr><td><span style="font-weight: bold">1</span></td><td>A</td><td>1</td><td>4</td><td>1</td></tr><tr><td><span style="font-weight: bold">2</span></td><td>B</td><td>2</td><td>10</td><td>1</td></tr><tr><td><span style="font-weight: bold">3</span></td><td>C</td><td>6</td><td>3</td><td>3</td></tr><tr><td><span style="font-weight: bold">4</span></td><td>D</td><td>4</td><td>6</td><td>4</td></tr><tr><td><span style="font-weight: bold">5</span></td><td>E</td><td>3</td><td>11</td><td>1</td></tr><tr><td><span style="font-weight: bold">6</span></td><td>F</td><td>n/a</td><td>1</td><td>6</td></tr><tr><td><span style="font-weight: bold">7</span></td><td>G</td><td>5</td><td>9</td><td>3</td></tr>					<tr><td><span style="font-weight: bold">8</span></td><td>H</td><td>10</td><td>3</td><td>8</td></tr><tr><td><span style="font-weight: bold">9</span></td><td>I</td><td>12</td><td>5</td><td>9</td></tr><tr><td><span style="font-weight: bold">10</span></td><td>J</td><td>13</td><td>2</td><td>10</td></tr></tbody></table>
+<span style="font-size: 85%; line-height: inherit">
+  <span style="font-style: italic">(<span style="font-weight: bold">Sort ↕</span> the table by clicking on the headers)</span>
+</span>
+
+<script>
+  document.querySelectorAll("th").forEach((header, index) => {
+    header.addEventListener("click", () => {
+      const table = header.closest("table");
+      const tbody = table.querySelector("tbody");
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+      const isAsc = header.classList.contains("asc");
+      const direction = isAsc ? -1 : 1;
+
+      rows.sort((a, b) => {
+        let aText = a.children[index].innerText.replace(/,/g,'');
+        let bText = b.children[index].innerText.replace(/,/g,'');
+        let aVal = parseFloat(aText); let bVal = parseFloat(bText);
+        if (isNaN(aVal) || isNaN(bVal)) {
+          return aText.localeCompare(bText) * direction;
+        } else {
+          return (aVal - bVal) * direction;
+        }
+      });
+
+      tbody.innerHTML = "";
+      rows.forEach(row => tbody.appendChild(row));
+
+      table.querySelectorAll("th").forEach(th => th.classList.remove("asc", "desc"));
+      header.classList.toggle("asc", !isAsc);
+      header.classList.toggle("desc", isAsc);
+    });
+  });
+</script>
+
+</body>
+</html>
