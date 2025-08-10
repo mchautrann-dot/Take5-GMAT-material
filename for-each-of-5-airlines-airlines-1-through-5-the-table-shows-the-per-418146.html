@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { cursor: pointer; background: #f2f2f2; }
+    th.asc::after { content: " ▲"; }
+    th.desc::after { content: " ▼"; }
+  </style>
+</head>
+<body>
+For each of 5 airlines (Airlines 1 through 5), the table shows the percent of flights offered by that airline last year that were delayed by certain ranges of time to the nearest minute and the total percent of flights offered by that airline last year that were delayed. The airlines are numbered from greatest total number of flights offered last year (Airline 1) to least total number of flights offered last year (Airline 5).­
+<table class="stoker table-sortable" data-type="sortable"><thead><tr><td></td><td colspan="6"><div style="text-align:center;"><span style="font-weight: bold">TOUR CITIES</span></div></td></tr><tr><th><span style="font-weight: bold">Airline</span><span class="icon-svg-play3"></span></th><th><span style="font-style: italic"><span style="font-weight: bold">1 to 15</span></span><span class="icon-svg-play3"></span></th><th><span style="font-style: italic"><span style="font-weight: bold">16 to 30</span></span><span class="icon-svg-play3"></span></th><th><span style="font-style: italic"><span style="font-weight: bold">31 to 45</span></span><span class="icon-svg-play3"></span></th><th><span style="font-style: italic"><span style="font-weight: bold">46 to 60</span></span><span class="icon-svg-play3"></span></th><th><span style="font-style: italic"><span style="font-weight: bold">More than 60</span></span><span class="icon-svg-play3"></span></th><th><span style="font-style: italic"><span style="font-weight: bold">Total delays</span></span><span class="icon-svg-play3"></span></th></tr></thead><tbody><tr><td><span style="font-weight: bold">4</span></td><td>6.3%</td><td>4.8%</td><td>5%</td><td>1.7%</td><td>2.5%</td><td>20.3%</td></tr><tr><td><span style="font-weight: bold">3</span></td><td>7.5%</td><td>7.1%</td><td>4.5%</td><td>2.2%</td><td>1.7%</td><td>23%</td></tr><tr><td><span style="font-weight: bold">1</span></td><td>8.5%</td><td>6.5%</td><td>5.8%</td><td>2.1%</td><td>1.6%</td><td>24.5%</td></tr><tr><td><span style="font-weight: bold">5</span></td><td>8.8%</td><td>5.9%</td><td>7.1%</td><td>1.9%</td><td>1.2%</td><td>24.9%</td></tr><tr><td><span style="font-weight: bold">2</span></td><td>9.2%</td><td>6.9%</td><td>4.9%</td><td>2.4%</td><td>2.8%</td><td>26.2%</td></tr></tbody></table>
+<span style="font-size: 85%; line-height: inherit">
+  <span style="font-style: italic">(<span style="font-weight: bold">Sort ↕</span> the table by clicking on the headers)</span>
+</span>
+
+<script>
+  document.querySelectorAll("th").forEach((header, index) => {
+    header.addEventListener("click", () => {
+      const table = header.closest("table");
+      const tbody = table.querySelector("tbody");
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+      const isAsc = header.classList.contains("asc");
+      const direction = isAsc ? -1 : 1;
+
+      rows.sort((a, b) => {
+        let aText = a.children[index].innerText.replace(/,/g,'');
+        let bText = b.children[index].innerText.replace(/,/g,'');
+        let aVal = parseFloat(aText); let bVal = parseFloat(bText);
+        if (isNaN(aVal) || isNaN(bVal)) {
+          return aText.localeCompare(bText) * direction;
+        } else {
+          return (aVal - bVal) * direction;
+        }
+      });
+
+      tbody.innerHTML = "";
+      rows.forEach(row => tbody.appendChild(row));
+
+      table.querySelectorAll("th").forEach(th => th.classList.remove("asc", "desc"));
+      header.classList.toggle("asc", !isAsc);
+      header.classList.toggle("desc", isAsc);
+    });
+  });
+</script>
+
+</body>
+</html>
