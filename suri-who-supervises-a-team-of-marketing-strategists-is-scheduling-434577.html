@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { cursor: pointer; background: #f2f2f2; }
+    th.asc::after { content: " ▲"; }
+    th.desc::after { content: " ▼"; }
+  </style>
+</head>
+<body>
+Suri, who supervises a team of marketing strategists, is scheduling a series of meetings for 5 days of the next business week. During the week, each of her 5 employees (Amani, Bianca, Camilo, Daniel, and Eita) will meet individually with every other of her employees, and also with her. Each employee will be scheduled for exactly one meeting each day. Suri has begun to schedule the meetings, and the meetings she has already scheduled are shown in the table. She has yet to finish scheduling the meetings for Thursday and Friday.
+<table class="stoker table-sortable" data-type="sortable"><thead><tr><th><span style="font-weight: bold">Day</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Employee Meeting 1</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Employee Meeting 2</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Meeting With Suri</span><span class="icon-svg-play3"></span></th></tr></thead><tbody><tr><td>Monday</td><td>Amani and Bianca </td><td>Camilo and Daniel</td><td>Eita</td></tr><tr><td>Tuesday</td><td>Amani and Camilo</td><td>Bianca and Eita</td><td>Daniel</td></tr><tr><td>Wednesday</td><td>Amani and Daniel</td><td>Camilo and Eita</td><td>Bianca</td></tr><tr><td>Thursday</td><td>Amani and Eita</td><td>-</td><td>-</td></tr><tr><td>Friday</td><td>-</td><td>-</td><td>-</td></tr></tbody></table>
+<span style="font-size: 85%; line-height: inherit">
+  <span style="font-style: italic">(<span style="font-weight: bold">Sort ↕</span> the table by clicking on the headers)</span>
+</span>
+
+<script>
+  document.querySelectorAll("th").forEach((header, index) => {
+    header.addEventListener("click", () => {
+      const table = header.closest("table");
+      const tbody = table.querySelector("tbody");
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+      const isAsc = header.classList.contains("asc");
+      const direction = isAsc ? -1 : 1;
+
+      rows.sort((a, b) => {
+        let aText = a.children[index].innerText.replace(/,/g,'');
+        let bText = b.children[index].innerText.replace(/,/g,'');
+        let aVal = parseFloat(aText); let bVal = parseFloat(bText);
+        if (isNaN(aVal) || isNaN(bVal)) {
+          return aText.localeCompare(bText) * direction;
+        } else {
+          return (aVal - bVal) * direction;
+        }
+      });
+
+      tbody.innerHTML = "";
+      rows.forEach(row => tbody.appendChild(row));
+
+      table.querySelectorAll("th").forEach(th => th.classList.remove("asc", "desc"));
+      header.classList.toggle("asc", !isAsc);
+      header.classList.toggle("desc", isAsc);
+    });
+  });
+</script>
+
+</body>
+</html>
