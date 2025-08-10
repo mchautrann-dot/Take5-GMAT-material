@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { cursor: pointer; background: #f2f2f2; }
+    th.asc::after { content: " ▲"; }
+    th.desc::after { content: " ▼"; }
+  </style>
+</head>
+<body>
+The table lists data on each of 8 items advertised by an Internet retailer on a single web page as part of a one-day sale. The term customer refers to anyone who viewed that web page on that day. For each item, the page placement denotes the quadrant of the page on which the item's advertisement appeared; the mean eye time is the average (arithmetic mean) number of seconds that each customer spent viewing the item's advertisement; the info click percentage is the percentage of all customers who clicked a button for more information; and the sales rank is the item's ranking based on sales, where a lesser number denotes greater sales.
+<table class="stoker table-sortable" data-type="sortable">	<thead><tr><th><span style="font-weight: bold">Item</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Page placement</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Mean eye time<br>(seconds)</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Infolclick<br>percentage (%)</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Sales rank</span><span class="icon-svg-play3"></span></th></tr></thead><tbody><tr><td><span style="font-weight: bold">A</span></td><td>upper left</td><td>8.2</td><td>35</td><td>2</td></tr><tr><td><span style="font-weight: bold">B</span></td><td>lower right</td><td>7.15</td><td>67</td><td>3</td></tr><tr><td><span style="font-weight: bold">C</span></td><td>lower left</td><td>7.25</td><td>22</td><td>8</td></tr><tr><td><span style="font-weight: bold">D</span></td><td>upper right</td><td>8.35</td><td>52</td><td>1</td></tr>					<tr><td><span style="font-weight: bold">E</span></td><td>upper left</td><td>8.42</td><td>74</td><td>7</td></tr><tr><td><span style="font-weight: bold">F</span></td><td>upper right</td><td>7.35</td><td>18</td><td>4</td></tr><tr><td><span style="font-weight: bold">G</span></td><td>lower left</td><td>6.55</td><td>5</td><td>6</td></tr><tr><td><span style="font-weight: bold">H</span></td><td>lower right</td><td>6.87</td><td>22</td><td>5</td></tr></tbody></table>
+<span style="font-size: 85%; line-height: inherit">
+  <span style="font-style: italic">(<span style="font-weight: bold">Sort ↕</span> the table by clicking on the headers)</span>
+</span>
+
+<script>
+  document.querySelectorAll("th").forEach((header, index) => {
+    header.addEventListener("click", () => {
+      const table = header.closest("table");
+      const tbody = table.querySelector("tbody");
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+      const isAsc = header.classList.contains("asc");
+      const direction = isAsc ? -1 : 1;
+
+      rows.sort((a, b) => {
+        let aText = a.children[index].innerText.replace(/,/g,'');
+        let bText = b.children[index].innerText.replace(/,/g,'');
+        let aVal = parseFloat(aText); let bVal = parseFloat(bText);
+        if (isNaN(aVal) || isNaN(bVal)) {
+          return aText.localeCompare(bText) * direction;
+        } else {
+          return (aVal - bVal) * direction;
+        }
+      });
+
+      tbody.innerHTML = "";
+      rows.forEach(row => tbody.appendChild(row));
+
+      table.querySelectorAll("th").forEach(th => th.classList.remove("asc", "desc"));
+      header.classList.toggle("asc", !isAsc);
+      header.classList.toggle("desc", isAsc);
+    });
+  });
+</script>
+
+</body>
+</html>
