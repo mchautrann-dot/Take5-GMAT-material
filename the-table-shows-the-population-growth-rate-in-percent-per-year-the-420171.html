@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { cursor: pointer; background: #f2f2f2; }
+    th.asc::after { content: " ▲"; }
+    th.desc::after { content: " ▼"; }
+  </style>
+</head>
+<body>
+The table shows the population growth rate (in percent per year), the total population, and the total land area of the eleven provinces of Nation X.
+<table class="stoker table-sortable" data-type="sortable"><thead><tr><th><span style="font-weight: bold">Province</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Population<br>growth rate</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Population</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Land area<br>(sq. km)</span><span class="icon-svg-play3"></span></th></tr></thead><tbody><tr><td><span style="font-weight: bold">Agae</span></td><td>1.55</td><td>156118</td><td>144</td></tr><tr><td><span style="font-weight: bold">Bai</span></td><td>1.17</td><td>201103</td><td>8515</td></tr><tr><td><span style="font-weight: bold">Oa</span></td><td>0.49</td><td>1330141</td><td>9597</td></tr><tr><td><span style="font-weight: bold">Ida</span></td><td>1.38</td><td>1173108</td><td>3287</td></tr><tr><td><span style="font-weight: bold">Idni</span></td><td>1.1</td><td>242968</td><td>1905</td></tr><tr><td><span style="font-weight: bold">Jan</span></td><td>-0.24</td><td>126804</td><td>378</td></tr><tr><td><span style="font-weight: bold">Mio</span></td><td>1.12</td><td>112469</td><td>1964</td></tr><tr><td><span style="font-weight: bold">Ngi</span></td><td>1.97</td><td>152217</td><td>924</td></tr><tr><td><span style="font-weight: bold">Pitan</span></td><td>1.59</td><td>184405</td><td>796</td></tr><tr><td><span style="font-weight: bold">Ri</span></td><td>-0.47</td><td>139390</td><td>17098</td></tr><tr><td><span style="font-weight: bold">Utestan</span></td><td>0.97</td><td>310233</td><td>9826</td></tr></tbody></table>
+<span style="font-size: 85%; line-height: inherit">
+  <span style="font-style: italic">(<span style="font-weight: bold">Sort ↕</span> the table by clicking on the headers)</span>
+</span>
+
+<script>
+  document.querySelectorAll("th").forEach((header, index) => {
+    header.addEventListener("click", () => {
+      const table = header.closest("table");
+      const tbody = table.querySelector("tbody");
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+      const isAsc = header.classList.contains("asc");
+      const direction = isAsc ? -1 : 1;
+
+      rows.sort((a, b) => {
+        let aText = a.children[index].innerText.replace(/,/g,'');
+        let bText = b.children[index].innerText.replace(/,/g,'');
+        let aVal = parseFloat(aText); let bVal = parseFloat(bText);
+        if (isNaN(aVal) || isNaN(bVal)) {
+          return aText.localeCompare(bText) * direction;
+        } else {
+          return (aVal - bVal) * direction;
+        }
+      });
+
+      tbody.innerHTML = "";
+      rows.forEach(row => tbody.appendChild(row));
+
+      table.querySelectorAll("th").forEach(th => th.classList.remove("asc", "desc"));
+      header.classList.toggle("asc", !isAsc);
+      header.classList.toggle("desc", isAsc);
+    });
+  });
+</script>
+
+</body>
+</html>
