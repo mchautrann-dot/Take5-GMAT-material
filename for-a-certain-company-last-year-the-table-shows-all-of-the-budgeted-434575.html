@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { cursor: pointer; background: #f2f2f2; }
+    th.asc::after { content: " ▲"; }
+    th.desc::after { content: " ▼"; }
+  </style>
+</head>
+<body>
+For a certain company last year, the table shows all of the budgeted amounts and actual expenditures in each of six categories. The table also shows the percentage over or under budget (the actual expenditures minus the budgeted amount as a percentage of the budgeted amount). A positive percentage indicates being over budget; a negative percentage indicates being under budget.
+<table class="stoker table-sortable" data-type="sortable"><thead><tr><th><span style="font-weight: bold">Category</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Budgeted</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Actual ependitures</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Percentage over/under budget</span><span class="icon-svg-play3"></span></th></tr></thead><tbody> <tr><td>Electricity</td><td>$7,120</td><td>$5,863.1</td><td>-17.7%</td></tr> <tr><td>Garbage pickup</td><td>$2,008</td><td>$2,250.66</td><td>12.1%</td></tr> <tr><td>Internet/telephone</td><td>$2,560</td><td>$2,639.3</td><td>3.1%</td></tr> <tr><td>Natural gas</td><td>$2,968</td><td>$2,658.21</td><td>-10.4%</td></tr> <tr><td>Sewer</td><td>$6,840</td><td>$6,428.94</td><td>-6%</td></tr> <tr><td>Water</td><td>$2,304</td><td>$2,369.9</td><td>2.9%</td></tr></tbody></table>
+<span style="font-size: 85%; line-height: inherit">
+  <span style="font-style: italic">(<span style="font-weight: bold">Sort ↕</span> the table by clicking on the headers)</span>
+</span>
+
+<script>
+  document.querySelectorAll("th").forEach((header, index) => {
+    header.addEventListener("click", () => {
+      const table = header.closest("table");
+      const tbody = table.querySelector("tbody");
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+      const isAsc = header.classList.contains("asc");
+      const direction = isAsc ? -1 : 1;
+
+      rows.sort((a, b) => {
+        let aText = a.children[index].innerText.replace(/,/g,'');
+        let bText = b.children[index].innerText.replace(/,/g,'');
+        let aVal = parseFloat(aText); let bVal = parseFloat(bText);
+        if (isNaN(aVal) || isNaN(bVal)) {
+          return aText.localeCompare(bText) * direction;
+        } else {
+          return (aVal - bVal) * direction;
+        }
+      });
+
+      tbody.innerHTML = "";
+      rows.forEach(row => tbody.appendChild(row));
+
+      table.querySelectorAll("th").forEach(th => th.classList.remove("asc", "desc"));
+      header.classList.toggle("asc", !isAsc);
+      header.classList.toggle("desc", isAsc);
+    });
+  });
+</script>
+
+</body>
+</html>
