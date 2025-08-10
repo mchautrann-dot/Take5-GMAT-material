@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { cursor: pointer; background: #f2f2f2; }
+    th.asc::after { content: " ▲"; }
+    th.desc::after { content: " ▼"; }
+  </style>
+</head>
+<body>
+The table summarizes the movement of the prices of ten stocks in a portfolio. The percentage change suggests the fluctuation in the price of stock as a function of the price at the end of the previous month. Negative sign suggests that the price decreased. The last column suggests the absolute price of the stock in US dollars on 30th Jun 2016.
+­
+<table class="stoker table-sortable" data-type="sortable"> <thead><tr><td></td><td colspan="6"><br><div style="text-align:center;"><span style="font-weight: bold">Percentage change in the price at the end of the month (All values are in %)</span></div></td><td></td></tr><tr><th><span style="font-weight: bold">Stock</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Jan-16</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Feb-16</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Mar-16</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Apr-16</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">May-16</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">June-16</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Price on 30th<br>Jun 2016 ($)</span><span class="icon-svg-play3"></span></th></tr></thead><tbody><tr><td>Acme</td><td>-5.3</td><td>-2.7</td><td>12.5</td><td>21.2</td><td>-17.8</td><td>-30.7</td><td>20.71</td></tr><tr><td>Bilo</td><td>12.2</td><td>15.7</td><td>-8.90</td><td>10.1</td><td>15.8</td><td>31.2</td><td>9.82</td></tr><tr><td>Ceta</td><td>2.3</td><td>-5.4</td><td>3.8</td><td>1.2</td><td>2.8</td><td>4.1</td><td>121.13</td></tr><tr><td>Dega</td><td>7.8</td><td>9.1</td><td>12.3</td><td>-7.8</td><td>-9.1</td><td>8.0</td><td>5.57</td></tr><tr><td>Echo</td><td>21.6</td><td>32.8</td><td>-20.9</td><td>-32.8</td><td>51.1</td><td>10.3</td><td>10.89</td></tr><tr><td>Famo</td><td>8.7</td><td>7.5</td><td>3.2</td><td>8.7</td><td>-2.3</td><td>-5.7</td><td>21.57</td></tr><tr><td>Gati</td><td>0.2</td><td>-0.4</td><td>-1.2</td><td>0.9</td><td>0.4</td><td>-0.1</td><td>241.29</td></tr><tr><td>Haty</td><td>19.1</td><td>-12.7</td><td>-13.2</td><td>15.8</td><td>41.1</td><td>12.5</td><td>7.81</td></tr><tr><td>Icha</td><td>31.7</td><td>21.2</td><td>41.7</td><td>52.8</td><td>19.1</td><td>22.7</td><td>6.99</td></tr><tr><td>Jamy</td><td>12.9</td><td>27.5</td><td>33.3</td><td>-5.7</td><td>14.3</td><td>15.8</td><td>52.81</td></tr></tbody></table>
+<span style="font-size: 85%; line-height: inherit">
+  <span style="font-style: italic">(<span style="font-weight: bold">Sort ↕</span> the table by clicking on the headers)</span>
+</span>
+
+<script>
+  document.querySelectorAll("th").forEach((header, index) => {
+    header.addEventListener("click", () => {
+      const table = header.closest("table");
+      const tbody = table.querySelector("tbody");
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+      const isAsc = header.classList.contains("asc");
+      const direction = isAsc ? -1 : 1;
+
+      rows.sort((a, b) => {
+        let aText = a.children[index].innerText.replace(/,/g,'');
+        let bText = b.children[index].innerText.replace(/,/g,'');
+        let aVal = parseFloat(aText); let bVal = parseFloat(bText);
+        if (isNaN(aVal) || isNaN(bVal)) {
+          return aText.localeCompare(bText) * direction;
+        } else {
+          return (aVal - bVal) * direction;
+        }
+      });
+
+      tbody.innerHTML = "";
+      rows.forEach(row => tbody.appendChild(row));
+
+      table.querySelectorAll("th").forEach(th => th.classList.remove("asc", "desc"));
+      header.classList.toggle("asc", !isAsc);
+      header.classList.toggle("desc", isAsc);
+    });
+  });
+</script>
+
+</body>
+</html>
