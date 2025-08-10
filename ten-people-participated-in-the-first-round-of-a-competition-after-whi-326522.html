@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { cursor: pointer; background: #f2f2f2; }
+    th.asc::after { content: " ▲"; }
+    th.desc::after { content: " ▼"; }
+  </style>
+</head>
+<body>
+Ten people participated in the first round of a competition, after which their scores were analyzed to determine which people would compete in the second round. The table shows the participants’ first-round scores, the difference between each participant’s score and the average (arithmetic mean) score of all participants, and the square of that difference.
+
+Before the second round of competition, one or more of the listed participants were disqualified. A new mean and new standard deviation will be calculated from only those players who were not disqualified.
+<table class="stoker table-sortable" data-type="sortable"><thead><tr><th><span style="font-weight: bold">Participant Name</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Score</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Difference from Mean</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Square of Difference from Mean</span><span class="icon-svg-play3"></span></th></tr></thead><tbody><tr><td>Arceneaux</td><td>56</td><td>—9</td><td>81</td></tr><tr><td>Cabrera</td><td>89</td><td>24</td><td>576</td></tr><tr><td>Costantino</td><td>34</td><td>—31</td><td>961</td></tr><tr><td>Fournier</td><td>24</td><td>—41</td><td>1681</td></tr><tr><td>Hough</td><td>109</td><td>44</td><td>1936</td></tr><tr><td>Keffala</td><td>56</td><td>—9</td><td>81</td></tr><tr><td>Lasek</td><td>120</td><td>55</td><td>3025</td></tr><tr><td>Sauer</td><td>6</td><td>—59</td><td>3481</td></tr><tr><td>Tsakiris</td><td>78</td><td>13</td><td>169</td></tr><tr><td>Willems</td><td>78</td><td>13</td><td>169</td></tr></tbody></table>
+<span style="font-size: 85%; line-height: inherit">
+  <span style="font-style: italic">(<span style="font-weight: bold">Sort ↕</span> the table by clicking on the headers)</span>
+</span>
+
+<script>
+  document.querySelectorAll("th").forEach((header, index) => {
+    header.addEventListener("click", () => {
+      const table = header.closest("table");
+      const tbody = table.querySelector("tbody");
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+      const isAsc = header.classList.contains("asc");
+      const direction = isAsc ? -1 : 1;
+
+      rows.sort((a, b) => {
+        let aText = a.children[index].innerText.replace(/,/g,'');
+        let bText = b.children[index].innerText.replace(/,/g,'');
+        let aVal = parseFloat(aText); let bVal = parseFloat(bText);
+        if (isNaN(aVal) || isNaN(bVal)) {
+          return aText.localeCompare(bText) * direction;
+        } else {
+          return (aVal - bVal) * direction;
+        }
+      });
+
+      tbody.innerHTML = "";
+      rows.forEach(row => tbody.appendChild(row));
+
+      table.querySelectorAll("th").forEach(th => th.classList.remove("asc", "desc"));
+      header.classList.toggle("asc", !isAsc);
+      header.classList.toggle("desc", isAsc);
+    });
+  });
+</script>
+
+</body>
+</html>
