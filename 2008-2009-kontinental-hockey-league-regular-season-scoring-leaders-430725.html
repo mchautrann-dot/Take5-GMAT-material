@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { cursor: pointer; background: #f2f2f2; }
+    th.asc::after { content: " ▲"; }
+    th.desc::after { content: " ▼"; }
+  </style>
+</head>
+<body>
+<div style="text-align:center;">­<span style="font-weight: bold">2008–2009 Kontinental Hockey League</span><br><span style="font-weight: bold">Regular Season Scoring Leaders</span></div>
+<table class="stoker table-sortable" data-type="sortable"><thead><tr><th>Name<span class="icon-svg-play3"></span></th><th>Team<span class="icon-svg-play3"></span></th><th>GP^1<span class="icon-svg-play3"></span></th><th>A^2<span class="icon-svg-play3"></span></th><th>PIM^3<span class="icon-svg-play3"></span></th><th>TOI/G^4<span class="icon-svg-play3"></span></th></tr></thead><tbody> <tr><td>Brendl, Pavel</td><td>Torpedo</td><td>56</td><td>15</td><td>48</td><td>16:03</td></tr> <tr><td>Dallman, Kevin</td><td>Barys</td><td>53</td><td>30</td><td>137</td><td>25:17</td></tr> <tr><td>Glazachev, Konstantin</td><td>Barys</td><td>56</td><td>24</td><td>30</td><td>20:13</td></tr> <tr><td>Hossa, Marcel</td><td>Dinamo</td><td>52</td><td>22</td><td>118</td><td>19:24</td></tr> <tr><td>Jágr, Jaromír</td><td>Avangard</td><td>55</td><td>28</td><td>62</td><td>17:52</td></tr> <tr><td>Korolyuk, Alexander</td><td>Atlant</td><td>56</td><td>32</td><td>32</td><td>15:23</td></tr> <tr><td>Marek, Jan</td><td>Metallurg</td><td>53</td><td>37</td><td>62</td><td>18:44</td></tr> <tr><td>Mårtensson, Tony</td><td>AK</td><td>55</td><td>35</td><td>22</td><td>17:00</td></tr> <tr><td>Morozov, Aleksey</td><td>AK</td><td>49</td><td>39</td><td>22</td><td>18:42</td></tr> <tr><td>Mozyakin, Sergei</td><td>Atlant</td><td>56</td><td>42</td><td>14</td><td>18:50</td></tr> <tr><td>Perezhogin, Alexander</td><td>Salavat</td><td>55</td><td>24</td><td>32</td><td>17:10</td></tr> <tr><td>Pirnes, Esa</td><td>Atlant</td><td>51</td><td>28</td><td>84</td><td>18:26</td></tr> <tr><td>Radivojevič, Branko</td><td>Spartak</td><td>49</td><td>26</td><td>86</td><td>17:18</td></tr> <tr><td>Radulov, Alexander</td><td>Salavat</td><td>52</td><td>26</td><td>92</td><td>16:59</td></tr> <tr><td>Spiridonov, Maxim</td><td>Barys</td><td>49</td><td>26</td><td>36</td><td>17:24</td></tr> <tr><td>Sushinski, Maxim</td><td>SKA</td><td>48</td><td>27</td><td>83</td><td>18:18</td></tr> <tr><td>Tereschenko, Alexei</td><td>Salavat</td><td>55</td><td>29</td><td>22</td><td>18:31</td></tr> <tr><td>Yashin, Alexei</td><td>Lokomotiv</td><td>56</td><td>26</td><td>30</td><td>17:18</td></tr> <tr><td>Zaripov, Danis</td><td>AK</td><td>56</td><td>31</td><td>26</td><td>18:10</td></tr></tbody></table>
+<span style="font-size: 85%; line-height: inherit">
+  <span style="font-style: italic">(<span style="font-weight: bold">Sort ↕</span> the table by clicking on the headers)</span>
+</span>
+
+<script>
+  document.querySelectorAll("th").forEach((header, index) => {
+    header.addEventListener("click", () => {
+      const table = header.closest("table");
+      const tbody = table.querySelector("tbody");
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+      const isAsc = header.classList.contains("asc");
+      const direction = isAsc ? -1 : 1;
+
+      rows.sort((a, b) => {
+        let aText = a.children[index].innerText.replace(/,/g,'');
+        let bText = b.children[index].innerText.replace(/,/g,'');
+        let aVal = parseFloat(aText); let bVal = parseFloat(bText);
+        if (isNaN(aVal) || isNaN(bVal)) {
+          return aText.localeCompare(bText) * direction;
+        } else {
+          return (aVal - bVal) * direction;
+        }
+      });
+
+      tbody.innerHTML = "";
+      rows.forEach(row => tbody.appendChild(row));
+
+      table.querySelectorAll("th").forEach(th => th.classList.remove("asc", "desc"));
+      header.classList.toggle("asc", !isAsc);
+      header.classList.toggle("desc", isAsc);
+    });
+  });
+</script>
+
+</body>
+</html>
