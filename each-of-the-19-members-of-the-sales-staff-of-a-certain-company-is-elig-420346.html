@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { cursor: pointer; background: #f2f2f2; }
+    th.asc::after { content: " ▲"; }
+    th.desc::after { content: " ▼"; }
+  </style>
+</head>
+<body>
+Each of the 19 members of the sales staff of a certain company is eligible for exactly three yearly bonuses for the current year. For the first bonus, $5,000 is paid to each member of the sales staff whose total sales for the current year exceeds $200,000. For the second bonus, $800 is paid to each of the two sales staff members with the two greatest increases in total sales over the previous year. For the third bonus, $300 is paid to each of the two members with the two greatest percentage increases in sales totals over the previous year. Sales totals, total differences, and percentage differences are provided in the table.
+<table class="stoker table-sortable" data-type="sortable"><thead><tr><th><span style="font-weight: bold">Sales staff<br>member</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Current<br>year ($)</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Previous<br>year ($)</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Total difference<br>(current minus<br>previous) ($)</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Percent<br>change (%)</span><span class="icon-svg-play3"></span></th></tr></thead><tbody><tr><td><span style="font-weight: bold">A</span></td><td>191970.71</td><td>222525.9</td><td>-30555.19</td><td>-13.7</td></tr><tr><td><span style="font-weight: bold">B</span></td><td>68732.32</td><td>40877.79</td><td>27854.53</td><td>68.1</td></tr><tr><td><span style="font-weight: bold">C</span></td><td>179512.5</td><td>222636.93</td><td>-43124.43</td><td>-19.4</td></tr><tr><td><span style="font-weight: bold">D</span></td><td>54824.88</td><td>89548.04</td><td>-34723.16</td><td>-38.8</td></tr><tr><td><span style="font-weight: bold">E</span></td><td>224588.34</td><td>237200.99</td><td>-12612.65</td><td>-5.3</td></tr><tr><td><span style="font-weight: bold">F</span></td><td>129886.9</td><td>94283.85</td><td>35603.05</td><td>37.8</td></tr><tr><td><span style="font-weight: bold">G</span></td><td>223751.24</td><td>214622.66</td><td>9128.58</td><td>4.3</td></tr><tr><td><span style="font-weight: bold">H</span></td><td>115440.3</td><td>122547.04</td><td>-7106.74</td><td>-5.8</td></tr><tr><td><span style="font-weight: bold">I</span></td><td>31511.94</td><td>28245.44</td><td>3266.5</td><td>11.6</td></tr><tr><td><span style="font-weight: bold">J</span></td><td>48161.81</td><td>45978.33</td><td>2183.48</td><td>4.7</td></tr><tr><td><span style="font-weight: bold">K</span></td><td>139165.28</td><td>144565.98</td><td>-5400.7</td><td>-3.7</td></tr><tr><td><span style="font-weight: bold">L</span></td><td>230866.97</td><td>239654.15</td><td>-8787.18</td><td>-3.7</td></tr><tr><td><span style="font-weight: bold">M</span></td><td>156835.85</td><td>131223.14</td><td>25612.71</td><td>19.5</td></tr><tr><td><span style="font-weight: bold">N</span></td><td>24565.04</td><td>25487.52</td><td>-922.48</td><td>-3.6</td></tr><tr><td><span style="font-weight: bold">O</span></td><td>211372.84</td><td>208258.47</td><td>3114.37</td><td>1.5</td></tr><tr><td><span style="font-weight: bold">P</span></td><td>203702.15</td><td>216512.7</td><td>-12810.55</td><td>-5.9</td></tr>							<tr><td><span style="font-weight: bold">Q</span></td><td>216122.52</td><td>201257.03</td><td>14865.49</td><td>7.4</td></tr><tr><td><span style="font-weight: bold">R</span></td><td>208488.47</td><td>182964.72</td><td>25523.75</td><td>14</td></tr><tr><td><span style="font-weight: bold">S</span></td><td>33635.84</td><td>30222.02</td><td>3413.82</td><td>11.3</td></tr></tbody></table>
+<span style="font-size: 85%; line-height: inherit">
+  <span style="font-style: italic">(<span style="font-weight: bold">Sort ↕</span> the table by clicking on the headers)</span>
+</span>
+
+<script>
+  document.querySelectorAll("th").forEach((header, index) => {
+    header.addEventListener("click", () => {
+      const table = header.closest("table");
+      const tbody = table.querySelector("tbody");
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+      const isAsc = header.classList.contains("asc");
+      const direction = isAsc ? -1 : 1;
+
+      rows.sort((a, b) => {
+        let aText = a.children[index].innerText.replace(/,/g,'');
+        let bText = b.children[index].innerText.replace(/,/g,'');
+        let aVal = parseFloat(aText); let bVal = parseFloat(bText);
+        if (isNaN(aVal) || isNaN(bVal)) {
+          return aText.localeCompare(bText) * direction;
+        } else {
+          return (aVal - bVal) * direction;
+        }
+      });
+
+      tbody.innerHTML = "";
+      rows.forEach(row => tbody.appendChild(row));
+
+      table.querySelectorAll("th").forEach(th => th.classList.remove("asc", "desc"));
+      header.classList.toggle("asc", !isAsc);
+      header.classList.toggle("desc", isAsc);
+    });
+  });
+</script>
+
+</body>
+</html>
