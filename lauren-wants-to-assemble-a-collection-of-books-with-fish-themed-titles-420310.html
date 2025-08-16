@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { cursor: pointer; background: #f2f2f2; }
+    th.asc::after { content: " ▲"; }
+    th.desc::after { content: " ▼"; }
+  </style>
+</head>
+<body>
+  
+Lauren wants to assemble a collection of books with fish-themed titles by shopping at her local bookstore. On the bookstore's website, she searched for the keyword fish. The search returned only the results shown in the table. From the copies in stock included in the search results, Lauren purchased a set of books consisting of 5 books with distinct titles from 4 different sections. The total price she paid was the lowest possible for such a set of books.
+<table class="stoker table-sortable" data-type="sortable"><thead><tr><th><span style="font-weight: bold">Title</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Author</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Format</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Section</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Copies in stock</span><span class="icon-svg-play3"></span></th><th><span style="font-weight: bold">Price ($)</span><span class="icon-svg-play3"></span></th></tr></thead><tbody><tr><td><span style="font-weight: bold">Curious George<br>at the Aquarium</span></td><td>Rey, Margaret</td><td>used hardcover</td><td>children's</td><td>1</td><td>3.99</td></tr><tr><td><span style="font-weight: bold">Curious George<br>Goes Fishing</span></td><td>Rey, A.</td><td>new hardcover</td><td>children's</td><td>3</td><td>2.98</td></tr><tr><td><span style="font-weight: bold">Eels</span></td><td>Prosek, James</td><td>new hardcover</td><td>science</td><td>1</td><td>25.99</td></tr><tr><td><span style="font-weight: bold">Fish</span></td><td>Bitbnan, Mark</td><td>used hardcover</td><td>cooking</td><td>2</td><td>11</td></tr><tr><td><span style="font-weight: bold">Fish</span></td><td>Batman, Mark</td><td>new paperback</td><td>cooking</td><td>4</td><td>9.98</td></tr><tr><td><span style="font-weight: bold">Float-fishing<br>Strategies</span></td><td>Streeks, E. Neale</td><td>new paperback</td><td>outdoors</td><td>0</td><td>19.95</td></tr><tr><td><span style="font-weight: bold">Salmon</span></td><td>Morgan, Diane</td><td>new paperback</td><td>cooking</td><td>2</td><td>9.98</td></tr><tr><td><span style="font-weight: bold">Saving Fish<br>from Drowning</span></td><td>Tan, Amy</td><td>used paperback</td><td>literature</td><td>6</td><td>2.63</td></tr><tr><td><span style="font-weight: bold">Saving Fish<br>from Drowning</span></td><td>Tan, Amy</td><td>new paperback </td><td>literature</td><td>1</td><td>7.98</td></tr></tbody></table>
+<span style="font-size: 85%; line-height: inherit">
+<span style="font-style: italic">(<span style="font-weight: bold">Sort ↕</span> the table by clicking on the headers)</span>
+</span>
+
+<script>
+  document.querySelectorAll("th").forEach((header, index) => {
+    header.addEventListener("click", () => {
+      const table = header.closest("table");
+      const tbody = table.querySelector("tbody");
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+      const isAsc = header.classList.contains("asc");
+      const direction = isAsc ? -1 : 1;
+
+      rows.sort((a, b) => {
+        let aText = a.children[index].innerText.replace(/,/g,'');
+        let bText = b.children[index].innerText.replace(/,/g,'');
+        let aVal = parseFloat(aText); let bVal = parseFloat(bText);
+        if (isNaN(aVal) || isNaN(bVal)) {
+          return aText.localeCompare(bText) * direction;
+        } else {
+          return (aVal - bVal) * direction;
+        }
+      });
+
+      tbody.innerHTML = "";
+      rows.forEach(row => tbody.appendChild(row));
+
+      table.querySelectorAll("th").forEach(th => th.classList.remove("asc", "desc"));
+      header.classList.toggle("asc", !isAsc);
+      header.classList.toggle("desc", isAsc);
+    });
+  });
+</script>
+
+</body>
+</html>
